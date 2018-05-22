@@ -1,0 +1,30 @@
+\begin{thebibliography}{}
+
+\bibitem[Bengio et~al., 2007]{Bengio07}
+Bengio, Y., Lamblin, P., Popovici, D., and Larochelle, H. (2007).
+\newblock {Greedy Layer-Wise Training of Deep Networks}.
+\newblock In {\em Advances in Neural Information Processing Systems 19
+  (NIPS‘06)}, pages 153--160. MIT Press.
+
+\bibitem[Feng and Simon, 2017]{FengSimon17}
+Feng, J. and Simon, N. (2017).
+\newblock {Sparse-Input Neural Networks for High-dimensional Nonparametric
+  Regression and Classification}.
+\newblock \url{https://arxiv.org/abs/1711.07592}.
+
+\bibitem[Frey and Hinton, 1999]{FreyHinton99}
+Frey, B.~J. and Hinton, G.~E. (1999).
+\newblock {Variational learning in nonlinear Gaussian belief networks}.
+\newblock {\em Neural Comput.}, 11(1):193--213.
+
+\bibitem[Hinton and Salakhutdinov, 2006]{Hinton06}
+Hinton, G.~E. and Salakhutdinov, R.~R. (2006).
+\newblock {Reducing the Dimensionality of Data with Neural Networks}.
+\newblock {\em Science}, 313(5786):504--507.
+
+\bibitem[{St\"{a}dler} et~al., 2010]{StadlerEtal10}
+{St\"{a}dler}, N., {B\"{u}hlmann}, P., and van~de Geer, S. (2010).
+\newblock {$\ell_1$-penalization for mixture regression models}.
+\newblock {\em Test}, 19:209--256.
+
+\end{thebibliography}
