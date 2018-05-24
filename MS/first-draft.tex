@@ -376,10 +376,11 @@ $$
 with respect to the empirical norm $\| h \|_{P_n} = \sqrt{\sum_{i=1}^n h^2 (\bfx_i)/n}$.
 
 \begin{Lemma}\label{lemma:thm2lemma1}
-For a collection of functions $\cH$ taking values in $\cX$, denote its metric entropy by $H(\cdot, \cH, \|.\|_{P_n})$. Then for any $u, r, M_n>0$ the following holds:
+For a collection of functions $\cH$ taking values in $\cX$, denote its metric entropy by $H(\cdot, \cH, \|.\|_{P_n})$. Then for any $u, r, M_n>0$ and some $c_0 > 0$ the following holds:
 %
 $$
-H(u, \cE_r, \|.\|_{P_n}) \leq \rtbd
+H(u, \cE_r, \|.\|_{P_n}) \leq 6K \log \left( \frac{5r M_n}{\sqrt{6K}u} \right) +
+\frac{ c_0 r^2 M_n^2}{u^2} \log \left(1 + \frac{p(p+q) u^2}{r^2 M_n^2} \right)
 $$
 %
 \end{Lemma}
@@ -388,7 +389,7 @@ $$
 For any $\bfeta, \bfeta' \in \Theta$, due to the mean value theorem there exists $\bfeta''$ so that
 %
 \begin{align}\label{eqn:thm2lemma1eqn1}
-\left\| \nabla_\bfeta \bar l(\bfx; \bfeta)|_{\bfeta - \bfeta''} \right\|_\infty =
+\left\| \nabla_\bfeta \bar l(\bfx; \bfeta)|_{\bfeta = \bfeta''} \right\|_\infty =
 \frac{| \bar l(\bfx; \bfeta) -  \bar l(\bfx; \bfeta')|}{\| \bfeta - \bfeta'\|_1}.
 \end{align}
 %
@@ -404,16 +405,24 @@ so that for $u > 0$,
 %
 \begin{align}
 H(u, \cE_r, \|.\|_{P_n}) & \leq
-H\left( u, \left\{ \bfvt: \| \bfvt - \bfvt_0 \|_2 \leq \frac{r}{\sqrt{6K}} \right\}, \|.\|_{P_n} \right) + \notag\\
-& H\left( u, \left\{\bftheta: \| \bftheta - \bftheta_0 \|_1 \leq r \right\} , \|.\|_{P_n} \right) 
+H\left( \frac{u}{M_n}, \left\{ \bfvt: \| \bfvt - \bfvt_0 \|_2 \leq \frac{r}{\sqrt{6K}} \right\}, \|.\|_2 \right) + \notag\\
+& H\left( \frac{u}{M_n}, \left\{\bftheta: \| \bftheta - \bftheta_0 \|_1 \leq r \right\} , \|.\|_2 \right) 
 \end{align}
 %
-The first term is bounded above by $6K \log(5r/(\sqrt{6K}u))$ \citep{StadlerEtal10}.
+The first term is bounded above by $6K \log(5r M_n/(\sqrt{6K}u))$ \citep{StadlerEtal10}. For the second term, we use Lemma 2.6.11 in \cite{vdvWellnerBook96} to obtain
+%
+$$
+H\left( \frac{u}{M_n}, \left\{\bftheta: \| \bftheta - \bftheta_0 \|_1 \leq r \right\} , \|.\|_2 \right) \leq
+\frac{ c_0 r^2 M_n^2}{u^2} \log \left(1 + \frac{p(p+q) u^2}{r^2 M_n^2} \right)
+$$
+%
+for some $c_0 > 0$. Putting them back in \eqref{eqn:thm2lemma1eqn1}, we have the needed.
 \end{proof}
+
+Leveraging the bound in Lemma~\ref{lemma:thm2lemma1}, we now prove that a symmetrized version of the truncated empirical process is small with high probability.
 
 \paragraph{Pat II: Bounding the tails.}
 \end{proof}
-
 
 %-----------------------------
 %\hrulefill

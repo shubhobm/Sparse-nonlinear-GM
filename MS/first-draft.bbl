@@ -27,4 +27,9 @@ Hinton, G.~E. and Salakhutdinov, R.~R. (2006).
 \newblock {$\ell_1$-penalization for mixture regression models}.
 \newblock {\em Test}, 19:209--256.
 
+\bibitem[van~der Vaart and Wellner, 1996]{vdvWellnerBook96}
+van~der Vaart, A. and Wellner, J. (1996).
+\newblock {\em {Weak convergence and empirical processes}}.
+\newblock Springer, Berlin.
+
 \end{thebibliography}
