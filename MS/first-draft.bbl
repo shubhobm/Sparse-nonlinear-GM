@@ -6,6 +6,11 @@ Bengio, Y., Lamblin, P., Popovici, D., and Larochelle, H. (2007).
 \newblock In {\em Advances in Neural Information Processing Systems 19
   (NIPS‘06)}, pages 153--160. MIT Press.
 
+\bibitem[{Csisz\'{a}r} and Shields, 2004]{LogSumBook}
+{Csisz\'{a}r}, I. and Shields, P. (2004).
+\newblock {\em {Information Theory and Statistics: A Tutorial}}.
+\newblock Now Publishers Inc.
+
 \bibitem[Feng and Simon, 2017]{FengSimon17}
 Feng, J. and Simon, N. (2017).
 \newblock {Sparse-Input Neural Networks for High-dimensional Nonparametric
@@ -26,6 +31,11 @@ Hinton, G.~E. and Salakhutdinov, R.~R. (2006).
 {St\"{a}dler}, N., {B\"{u}hlmann}, P., and van~de Geer, S. (2010).
 \newblock {$\ell_1$-penalization for mixture regression models}.
 \newblock {\em Test}, 19:209--256.
+
+\bibitem[{van de Geer}, 2000]{vandeGeerBook00}
+{van de Geer}, S. (2000).
+\newblock {\em {Applications of Empirical Process Theory}}.
+\newblock Cambridge University Press.
 
 \bibitem[van~der Vaart and Wellner, 1996]{vdvWellnerBook96}
 van~der Vaart, A. and Wellner, J. (1996).

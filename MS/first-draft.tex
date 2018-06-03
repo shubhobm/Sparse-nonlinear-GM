@@ -361,17 +361,19 @@ We follow an approach similar to \cite{StadlerEtal10} and \cite{FengSimon17} to 
 so that
 \begin{align}
 | \bar V_n(\bfeta) - \bar V_n(\bfeta_0) | & \leq
-\BE [| \bar l(\bfx; \bfeta) -  \bar l(\bfx; \bfeta_0)| \BI(G(\bfx) \leq M_n)] - \notag\\
+\BE [| \bar l(\bfx; \bfeta) -  \bar l(\bfx; \bfeta_0)| \BI(G(\bfx) \leq M_n)] + \notag\\
 & \frac{1}{n} \sum_{i=1}^n | \bar l(\bfx_i; \bfeta) -  \bar l(\bfx_i; \bfeta_0)| \BI(G(\bfx_i) \leq M_n)
 \label{eqn:thm2eqn1}
 \end{align}
 %
 To get an upper bound on the right hand side of \eqref{eqn:thm2eqn1}, we start by bounding the entropy of the functional class $\cE_r, r >0$:
 %
-$$
-\cE_r := \left\{ \bar l(\bfx; \bfeta) -  \bar l(\bfx; \bfeta_0) \BI(G(\bfx) \leq M_n):
-P_\alpha(\bftheta - \bftheta_0) + \| \bfvt - \bfvt_0 \|_2 \leq r \right\}
-$$
+\begin{align*}
+\Theta_r & := \{ \bfeta = (\bftheta, \bfvt): 
+P_\alpha(\bftheta - \bftheta_0) + \| \bfvt - \bfvt_0 \|_2 \leq r \}\\
+\cE_r & := \left\{ \bar l(\bfx; \bfeta) -  \bar l(\bfx; \bfeta_0) \BI(G(\bfx) \leq M_n): \bfeta \in \Theta_r
+\right\}
+\end{align*}
 %
 with respect to the empirical norm $\| h \|_{P_n} = \sqrt{\sum_{i=1}^n h^2 (\bfx_i)/n}$.
 
@@ -379,8 +381,8 @@ with respect to the empirical norm $\| h \|_{P_n} = \sqrt{\sum_{i=1}^n h^2 (\bfx
 For a collection of functions $\cH$ taking values in $\cX$, denote its metric entropy by $H(\cdot, \cH, \|.\|_{P_n})$. Then for any $u, r, M_n>0$ and some $c_0 > 0$ the following holds:
 %
 $$
-H(u, \cE_r, \|.\|_{P_n}) \leq 6K \log \left( \frac{5r M_n}{\sqrt{6K}u} \right) +
-\frac{ c_0 r^2 M_n^2}{u^2} \log \left(1 + \frac{p(p+q) u^2}{r^2 M_n^2} \right)
+H(u, \cE_r, \|.\|_{P_n}) \leq \frac{ (5 + c_0) r^2 M_n^2}{u^2}
+\log \left(1 + \frac{d u^2}{r^2 M_n^2} \right)
 $$
 %
 \end{Lemma}
@@ -395,31 +397,136 @@ For any $\bfeta, \bfeta' \in \Theta$, due to the mean value theorem there exists
 %
 Define $e_\bfeta(\bfx) = | \bar l(\bfx; \bfeta) -  \bar l(\bfx; \bfeta_0)| \BI(G(\bfx) \leq M_n)$. Then, combining \eqref{eqn:thm2lemma1eqn1} with Condition (4) we get
 %
-\begin{align*}
-| e_\bfeta (\bfx) - e_{\bfeta'} (\bfx) | & \leq | \bar l(\bfx; \bfeta) -  \bar l(\bfx; \bfeta')| \BI(G(\bfx) \leq M_n)\\
-& \leq M_n( \| \bftheta - \bftheta'\|_1 + \| \bfvt - \bfvt' \|_1)\\
-& \leq M_n( \| \bftheta - \bftheta'\|_1 + \sqrt{6K} \| \bfvt - \bfvt' \|_2)
-\end{align*}
+\begin{align}
+| e_\bfeta (\bfx) - e_{\bfeta'} (\bfx) | & \leq | \bar l(\bfx; \bfeta) -  \bar l(\bfx; \bfeta')| \BI(G(\bfx) \leq M_n) \notag\\
+& \leq M_n( \| \bftheta - \bftheta'\|_1 + \| \bfvt - \bfvt' \|_1) \notag\\
+& \leq M_n( \| \bftheta - \bftheta'\|_1 + \sqrt{6K} \| \bfvt - \bfvt' \|_2) \label{eqn:thm2lemma1eqn2}
+\end{align}
 %
 so that for $u > 0$,
 %
-\begin{align}
+\begin{align}\label{eqn:thm2lemma1eqn3}
 H(u, \cE_r, \|.\|_{P_n}) & \leq
 H\left( \frac{u}{M_n}, \left\{ \bfvt: \| \bfvt - \bfvt_0 \|_2 \leq \frac{r}{\sqrt{6K}} \right\}, \|.\|_2 \right) + \notag\\
 & H\left( \frac{u}{M_n}, \left\{\bftheta: \| \bftheta - \bftheta_0 \|_1 \leq r \right\} , \|.\|_2 \right) 
 \end{align}
 %
-The first term is bounded above by $6K \log(5r M_n/(\sqrt{6K}u))$ \citep{StadlerEtal10}. For the second term, we use Lemma 2.6.11 in \cite{vdvWellnerBook96} to obtain
+The first term is bounded above by $6K \log(5r M_n/(\sqrt{6K}u))$ \citep{StadlerEtal10}. Also $\log x/x \leq 1/e$ for any $x > 0$ implies that
+%
+$$
+6K \log \left( \frac{5 r M_n}{\sqrt{6K} u} \right) = 3K \log \left( \frac{25 r^2 M_n^2}{6K u^2} \right) \leq
+\frac{25 r^2 M_n^2}{2e u^2} \leq \frac{5 r^2 M_n^2}{u^2}
+$$
+%
+For the second term, we use Lemma 2.6.11 in \cite{vdvWellnerBook96} to obtain
 %
 $$
 H\left( \frac{u}{M_n}, \left\{\bftheta: \| \bftheta - \bftheta_0 \|_1 \leq r \right\} , \|.\|_2 \right) \leq
-\frac{ c_0 r^2 M_n^2}{u^2} \log \left(1 + \frac{p(p+q) u^2}{r^2 M_n^2} \right)
+\frac{ c_0 r^2 M_n^2}{u^2} \log \left(1 + \frac{d u^2}{r^2 M_n^2} \right)
 $$
 %
-for some $c_0 > 0$. Putting them back in \eqref{eqn:thm2lemma1eqn1}, we have the needed.
+for some $c_0 > 0$. Now putting everything back in \eqref{eqn:thm2lemma1eqn3} we have the needed.
 \end{proof}
 
 Leveraging the bound in Lemma~\ref{lemma:thm2lemma1}, we now prove that a symmetrized version of the truncated empirical process is small with high probability.
+
+\begin{Lemma}\label{lemma:thm2lemma2}
+Assume fixed $\bfX$, and Rademacher random variables $W_i, i \in \cI_n$ (defined as $P(W_i = 1) = P(W_i = -1) = 1/2$). Also define
+%
+\begin{align}\label{eqn:defineDelta}
+\delta = ( 5 + c_0 )^{1/2} \left[ 1 + M_n 
+\log \left( \frac{n \sqrt{c_1 K} M_n}{m_\alpha} \right) \sqrt{ \frac{ \log d}{n}} \right]
+\end{align}
+%
+for constants $c_0, c_1 > 0$, and $m_\alpha := \alpha \vee (1-\alpha)$. Then for any $r>0, T \geq 1$ we have
+%
+$$
+P \left( \sup_{\bfeta \in \Theta_r} \left| \frac{1}{n} \sum_{i=1}^n W_i (\bar l(\bfx_i; \bfeta) -  \bar l( \bfx_i; \bfeta_0)) \BI(G(\bfx) \leq M_n ) \right| \geq T r \delta \right) $$
+$$ \leq C \exp \left[ - \frac{n T^2 \delta^2 m_\alpha^2 ( r^2 \vee 1)}{ C_1^2 K M_n^2} \right]
+$$
+%
+for constants $C, C_1 > 0$.
+\end{Lemma}
+
+\begin{proof}[Proof of Lemma~\ref{lemma:thm2lemma2}]
+Continuing from the right hand side of \eqref{eqn:thm2lemma1eqn2}, we have for any $\bfeta, \bfeta' \in \Theta_r$,
+%
+\begin{align*}
+| \bar l(\bfx; \bfeta) -  \bar l( \bfx; \bfeta')|^2 \BI(G(\bfx) \leq M_n ) & \leq
+6K M_n^2 \left( \| \bftheta - \bftheta'\|_1 + \| \bfvt - \bfvt' \|_2 \right)^2\\
+& \leq \frac{6 K M_n^2}{m_\alpha^2}
+\left( P_\alpha( \bftheta - \bftheta_0) + \| \bfeta - \bfeta_0 \|_2 + \right.\\
+& \qquad \left. P_\alpha( \bftheta' - \bftheta_0) + \| \bfeta' - \bfeta_0 \|_2 \right)^2\\
+& \leq \frac{24 K M_n^2 r^2}{m_\alpha^2}
+\end{align*}
+%
+Now applying second part of Condition 4 we get
+%
+\begin{align}\label{eqn:thm2lemma2eqn1}
+\frac{1}{n} \sum_{i=1}^n | \bar l(\bfx_i; \bfeta) -  \bar l( \bfx_i; \bfeta')|^2 \BI(G(\bfx) \leq M_n ) \leq
+\frac{c_1 K M_n^2 ( r^2 \wedge 1)}{m_\alpha^2} := R_n^2.
+\end{align}
+%
+Also, say $\tilde R_n^2 = c_1 K M_n^2 r^2 /m_\alpha^2$. Now using Lemma~\ref{lemma:thm2lemma1} we have
+%
+\begin{align}
+\int_{r/n}^{R_n} H^{1/2} (u, \cE_r, \|.\|_{P_n}) du & \leq
+\int_{r/n}^{\tilde R_n} H^{1/2} (u, \cE_r, \|.\|_{P_n}) du \notag\\
+& \leq ( 5 + c_0 )^{1/2}  \int_{r/n}^{\tilde R_n}
+\frac{ r M_n }{u} \log^{1/2} \left( 1 + \frac{ d u^2}{r^2 M_n^2} \right) du \label{eqn:thm2lemma2eqn2}
+\end{align}
+%
+We now use the following general lemma:
+%
+\begin{Lemma}\label{lemma:thm2lemma3}
+For any $t > 0$, we have $\log(1+t) \leq \log 2 + |\log t|$.
+\end{Lemma}
+
+\begin{proof}[Proof of Lemma~\ref{lemma:thm2lemma3}]
+%The log-sum inequality \citep{LogSumBook} states that for non-negative reals $p_1, \ldots, p_m$ and $q_1, \ldots, q_m$, we have
+%%
+%$$
+%\sum_{i=1}^m p_i \log \left( \frac{p_i}{q_i} \right) \geq \left( \sum_{i=1}^m p_i \right)
+%\log \left( \frac{\sum_i p_i}{\sum_i q_i} \right).
+%$$
+%%
+%Now take $m = 2, p_1 = q_1 = q_2 = 1, p_2 = t$. This gives
+%%
+%\begin{align*}
+%t \log t & \geq (1+t) \log \left( \frac{1 + t}{2} \right)\\
+%\Rightarrow \log(1+t) & \leq \frac{t}{1+t} \log t + \log 2 < \log t + \log 2.
+%\end{align*}
+If $t \geq 1$, we have $\log(1+t) \leq \log(2t) = \log 2 + \log t$. Else $\log (1+t) < \log(1 + 1/t) = \log(t+1) + |\log t| < \log 2 + |\log t|$.
+\end{proof}
+
+Thus
+%
+$$
+\log^{1/2} \left( 1 + \frac{ d u^2}{r^2 M_n^2} \right) \leq
+\sqrt{\log 2} + \sqrt{ \log d} + \sqrt{ \left| \log \left( \frac{ u^2}{r^2 M_n^2} \right) \right| }.
+$$
+%
+Putting this back in \eqref{eqn:thm2lemma2eqn2},
+%
+\begin{align}
+\frac{1}{\sqrt n} \int_{r/n}^{R_n} H^{1/2} (u, \cE_r, \|.\|_{P_n}) du & \leq
+( 5 + c_0 )^{1/2} \left[ 1 + \sqrt{ \frac{ \log d}{n}} \int_{r/n}^{\tilde R_n} \frac{r M_n}{u} du \right] \notag\\
+& = ( 5 + c_0 )^{1/2} \left[ 1 + r M_n 
+\log \left( \frac{n \tilde R_n}{r} \right) \sqrt{ \frac{ \log d}{n}} \right] \notag\\
+& = ( 5 + c_0 )^{1/2} \left[ 1 + r M_n 
+\log \left( \frac{n \sqrt{c_1 K} M_n}{m_\alpha} \right) \sqrt{ \frac{ \log d}{n}} \right]
+\label{eqn:thm2lemma2eqn3}
+\end{align}
+%
+Take $\delta$ as in \eqref{eqn:defineDelta}. We now apply Lemma 3.2 in \cite{vandeGeerBook00} on the functional class $\cE_r$. Combining \eqref{eqn:thm2lemma2eqn1} and \eqref{eqn:thm2lemma2eqn3}, all conditions of the lemma are satisfied. Thus we obtain
+%
+$$
+P \left( \sup_{\bfeta \in \Theta_r} \left| \frac{1}{n} \sum_{i=1}^n W_i (\bar l(\bfx_i; \bfeta) -  \bar l( \bfx_i; \bfeta_0)) \BI(G(\bfx) \leq M_n ) \right| \geq \delta \right) \leq
+C \exp \left[ - \frac{n \delta^2}{ C^2 R_n^2} \right]
+$$
+%
+by applying the lemma. Now replace $\delta$ by $Tr \delta$ and substitute for $R_n^2$ from right hand side of \eqref{eqn:thm2lemma2eqn1} to get the needed.
+\end{proof}
 
 \paragraph{Pat II: Bounding the tails.}
 \end{proof}
