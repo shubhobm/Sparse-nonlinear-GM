@@ -434,8 +434,8 @@ Leveraging the bound in Lemma~\ref{lemma:thm2lemma1}, we now prove that a symmet
 Assume fixed $\bfX$, and Rademacher random variables $W_i, i \in \cI_n$ (defined as $P(W_i = 1) = P(W_i = -1) = 1/2$). Also define
 %
 \begin{align}\label{eqn:defineDelta}
-\delta = ( 5 + c_0 )^{1/2} \left[ 1 + M_n 
-\log \left( \frac{n \sqrt{c_1 K} M_n}{m_\alpha} \right) \sqrt{ \frac{ \log d}{n}} \right]
+\delta = ( 5 + c_0 )^{1/2} \frac{M_n}{\sqrt n} \left[ \frac{ \sqrt{2 c_1 K}}{m_\alpha} + 
+\log \left( \frac{n \sqrt{c_1 K} M_n}{m_\alpha} \right) \sqrt{ \log (2d)} \right]
 \end{align}
 %
 for constants $c_0, c_1 > 0$, and $m_\alpha := \alpha \vee (1-\alpha)$. Then for any $r>0, T \geq 1$ we have
@@ -445,7 +445,7 @@ P \left( \sup_{\bfeta \in \Theta_r} \left| \frac{1}{n} \sum_{i=1}^n W_i (\bar l(
 $$ \leq C \exp \left[ - \frac{n T^2 \delta^2 m_\alpha^2 ( r^2 \vee 1)}{ C_1^2 K M_n^2} \right]
 $$
 %
-for constants $C, C_1 > 0$.
+for constants $C, C_1 > 0$ and sample size $n > m_\alpha (M_n \sqrt{c_1 K})^{-1}$.
 \end{Lemma}
 
 \begin{proof}[Proof of Lemma~\ref{lemma:thm2lemma2}]
@@ -476,13 +476,13 @@ Also, say $\tilde R_n^2 = c_1 K M_n^2 r^2 /m_\alpha^2$. Now using Lemma~\ref{lem
 \frac{ r M_n }{u} \log^{1/2} \left( 1 + \frac{ d u^2}{r^2 M_n^2} \right) du \label{eqn:thm2lemma2eqn2}
 \end{align}
 %
-We now use the following general lemma:
+%We now use the following general lemma:
+%%
+%\begin{Lemma}\label{lemma:thm2lemma3}
+%For any $t > 0$, we have $\log(1+t) \leq \log 2 + |\log t|$.
+%\end{Lemma}
 %
-\begin{Lemma}\label{lemma:thm2lemma3}
-For any $t > 0$, we have $\log(1+t) \leq \log 2 + |\log t|$.
-\end{Lemma}
-
-\begin{proof}[Proof of Lemma~\ref{lemma:thm2lemma3}]
+%\begin{proof}[Proof of Lemma~\ref{lemma:thm2lemma3}]
 %The log-sum inequality \citep{LogSumBook} states that for non-negative reals $p_1, \ldots, p_m$ and $q_1, \ldots, q_m$, we have
 %%
 %$$
@@ -496,25 +496,59 @@ For any $t > 0$, we have $\log(1+t) \leq \log 2 + |\log t|$.
 %t \log t & \geq (1+t) \log \left( \frac{1 + t}{2} \right)\\
 %\Rightarrow \log(1+t) & \leq \frac{t}{1+t} \log t + \log 2 < \log t + \log 2.
 %\end{align*}
-If $t \geq 1$, we have $\log(1+t) \leq \log(2t) = \log 2 + \log t$. Else $\log (1+t) < \log(1 + 1/t) = \log(t+1) + |\log t| < \log 2 + |\log t|$.
-\end{proof}
+%If $t \geq 1$, we have $\log(1+t) \leq \log(2t) = \log 2 + \log t$. Else $\log (1+t) < \log(1 + 1/t) = \log(t+1) + |\log t| < \log 2 + |\log t|$.
+%\end{proof}
+%
+%Thus
+%%
+%$$
+%\log^{1/2} \left( 1 + \frac{ d u^2}{r^2 M_n^2} \right) \leq
+%\sqrt{\log 2 d} + \sqrt{ \left| \log \left( \frac{ u^2}{r^2 M_n^2} \right) \right| }.
+%$$
+%%
+%Putting this back in \eqref{eqn:thm2lemma2eqn2},
+%
+There are three cases now.
 
-Thus
+\paragraph{Case I:} If $\tilde R_n/r M_n < 1$, we have
 %
 $$
-\log^{1/2} \left( 1 + \frac{ d u^2}{r^2 M_n^2} \right) \leq
-\sqrt{\log 2} + \sqrt{ \log d} + \sqrt{ \left| \log \left( \frac{ u^2}{r^2 M_n^2} \right) \right| }.
+\int_{r/n}^{\tilde R_n} \frac{1}{u} \log^{1/2} \left( 1 + \frac{ d u^2}{r^2 M_n^2} \right) du \leq
+\sqrt{\log (2d)} \log \left( \frac{n \tilde R_n}{r} \right)
 $$
+
+\paragraph{Case II:} If $1 < (nM_n)^{-1}$, we have
 %
-Putting this back in \eqref{eqn:thm2lemma2eqn2},
+\begin{align*}
+\int_{r/n}^{\tilde R_n} \frac{1}{u} \log^{1/2} \left( 1 + \frac{ d u^2}{r^2 M_n^2} \right) du
+& \leq \sqrt{\log d} \int_{r/n}^{\tilde R_n} \frac{du}{u} +
+\int_{r/n}^{\tilde R_n} \frac{1}{u} \log^{1/2} \left( \frac{2 u^2}{r^2 M_n^2} \right) du \\
+& \leq \sqrt{\log (d)} \log \left( \frac{n \tilde R_n}{r} \right) +
+\int_{r/n}^{\tilde R_n} \frac{1}{u} \frac{\sqrt 2 u}{r M_n} du \\
+& \leq \sqrt{\log (d)} \log \left( \frac{n \tilde R_n}{r} \right) + \frac{\sqrt 2 \tilde R_n}{r M_n}
+\end{align*}
+%
+using the fact that $\log x/x < 1/e < 1$ for any $x>0$.
+
+\paragraph{Case II:} If $(nM_n)^{-1} < 1 < \tilde R_n/r M_n$, we have
+%
+\begin{align*}
+\int_{r/n}^{\tilde R_n} \frac{1}{u} \log^{1/2} \left( 1 + \frac{ d u^2}{r^2 M_n^2} \right) du &=
+\sqrt{\log d} \int_{r/n}^{\tilde R_n} \frac{du}{u} +
+\int_{r/n}^{1} \frac{1}{u} \log^{1/2} \left( 1 + \frac{u^2}{r^2 M_n^2} \right) du +\\
+& \int_{1}^{\tilde R_n} \frac{1}{u} \log^{1/2} \left( 1 + \frac{u^2}{r^2 M_n^2} \right) du \\
+& \leq \sqrt{\log (2d)} \log \left( \frac{n \tilde R_n}{r} \right) + \frac{\sqrt 2 \tilde R_n}{r M_n}
+\end{align*}
+%
+
+Now $n > m_\alpha (M_n \sqrt{c_1 K})^{-1}$ implies $n \tilde R_n/r > 1$ so $\log(n \tilde R_n/r)>0$. Thus we can combine all three cases to get the common upper bound:
 %
 \begin{align}
-\frac{1}{\sqrt n} \int_{r/n}^{R_n} H^{1/2} (u, \cE_r, \|.\|_{P_n}) du & \leq
-( 5 + c_0 )^{1/2} \left[ 1 + \sqrt{ \frac{ \log d}{n}} \int_{r/n}^{\tilde R_n} \frac{r M_n}{u} du \right] \notag\\
-& = ( 5 + c_0 )^{1/2} \left[ 1 + r M_n 
-\log \left( \frac{n \tilde R_n}{r} \right) \sqrt{ \frac{ \log d}{n}} \right] \notag\\
-& = ( 5 + c_0 )^{1/2} \left[ 1 + r M_n 
-\log \left( \frac{n \sqrt{c_1 K} M_n}{m_\alpha} \right) \sqrt{ \frac{ \log d}{n}} \right]
+\int_{r/n}^{R_n} H^{1/2} (u, \cE_r, \|.\|_{P_n}) du & \leq
+( 5 + c_0 )^{1/2} \left[ \sqrt 2 \tilde R_n + r M_n 
+\log \left( \frac{n \sqrt{c_1 K} M_n}{m_\alpha} \right) \sqrt{ \log (2d)} \right] \notag\\
+&= ( 5 + c_0 )^{1/2} r M_n \left[ \frac{ \sqrt{2 c_1 K}}{m_\alpha} + 
+\log \left( \frac{n \sqrt{c_1 K} M_n}{m_\alpha} \right) \sqrt{ \log (2d)} \right]
 \label{eqn:thm2lemma2eqn3}
 \end{align}
 %
@@ -528,8 +562,59 @@ $$
 by applying the lemma. Now replace $\delta$ by $Tr \delta$ and substitute for $R_n^2$ from right hand side of \eqref{eqn:thm2lemma2eqn1} to get the needed.
 \end{proof}
 
-\paragraph{Pat II: Bounding the tails.}
+Using \eqref{eqn:thm2eqn1} and Corollary 3.4 in \cite{vandeGeerBook00}, we now obtain the bound:
+%
+\begin{align}\label{eqn:thm2eqn3}
+P \left( \sup_{\bfeta \in \Theta_r} | \bar V_n(\bfeta) - \bar V_n(\bfeta_0) |
+\geq T r \delta \right) \leq
+5 C \exp \left[ - \frac{n T^2 \delta^2 m_\alpha^2 ( r^2 \vee 1)}{ 16 C_1^2 K M_n^2} \right].
+\end{align}
+
+Finally, the following lemma bounds a scaled version of $| \bar V_n(\bfeta) - \bar V_n(\bfeta_0) |$ over the full parameter space $\Theta$.
+
+\begin{Lemma}\label{lemma:thm2lemma3}
+Let $\lambda_0 = 2 \delta$. Then for any $T \geq 1$ we have
+%
+$$
+P \left( \sup_\bfeta \frac{ |\bar V_n(\bfeta_0) - \bar V_n(\bfeta)| }{\lambda_0 \vee
+(P_\alpha(\bftheta - \bftheta_0) + \| \bfvt - \bfvt_0 \|_2) } \geq T \lambda_0 \right) \leq
+C_2 \log n \exp \left[ - \frac{n T^2 \delta^2 }{ C_3^2 K M_n^2} \right].
+$$
+\end{Lemma}
+
+\begin{proof}[Proof of Lemma~\ref{lemma:thm2lemma3}]
+The proof follows using a peeling argument similar to the proof of Lemma 4 in \cite{FengSimon17} and Lemma 2 in \cite{StadlerEtal10}. We leave the details to the reader.
 \end{proof}
+
+\paragraph{Pat II: Bounding the tails.} Using taylor expansion, we have
+%
+\begin{align*}
+| \bar l(\bfx; \bfeta) -  \bar l(\bfx; \bfeta_0)| \BI(G(\bfx) > M_n) & \leq
+G(\bfx) \BI(G(\bfx) > M_n) (\| \bftheta - \bftheta_0)\|_1 + \| \bfvt - \bfvt_0 \|_1) \\
+& \leq \frac{\sqrt{6K}}{m_\alpha} G(\bfx) \BI(G(\bfx) > M_n) ( P_\alpha( \bftheta - \bftheta_0) + \| \bfvt - \bfvt_0 \|_2) \\
+\Rightarrow \frac{| \bar l(\bfx; \bfeta) -  \bar l(\bfx; \bfeta_0)| \BI(G(\bfx) > M_n)}
+{P_\alpha( \bftheta - \bftheta_0) + \| \bfvt - \bfvt_0 \|_2}
+& \leq \frac{\sqrt{6K}}{m_\alpha} G(\bfx) \BI(G(\bfx) > M_n)
+\end{align*}
+%
+Now since $\bfx = \varphi(\bfz)^T \bfB + \bfepsilon$ and $\varphi(\cdot)$ is bounded, we have the bound
+%
+$$
+G(\bfx) \leq k_1 ( \| \bfepsilon \| + k_2 ); \quad k_1, k_2 > 0,
+$$
+%
+so that
+%
+\begin{align*}
+& P \left( \sup_\bfeta \frac{ |V_n(\bfeta_0) - V_n(\bfeta)| \BI(G(\bfx) > M_n)}{\lambda_0 \vee
+(P_\alpha(\bftheta - \bftheta_0) + \| \bfvt - \bfvt_0 \|_2) } \geq T \lambda_0 \right) \\
+& \leq P \left( \frac{\sqrt K}{n} \sum_{i=1}^n k_3 (\| \bfepsilon_i \| + k_4) \BI(\| \bfepsilon_i \| > M_n - k_5)
++ \BE [ k_3 (\| \bfepsilon \| + k_4) \BI(\| \bfepsilon \| > M_n - k_5) ] \geq T k_6 \lambda_0 \right) 
+\end{align*}
+
+\end{proof}
+%
+
 
 %-----------------------------
 %\hrulefill
