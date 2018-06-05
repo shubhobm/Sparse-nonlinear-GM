@@ -338,13 +338,15 @@ for any $M \geq 0$ and $\bfeta, \bfeta'$.
 For the choice of $\lambda_0$:
 %
 $$
-\lambda_0 = \rtbd,
+\lambda_0 = 2 ( 5 + c_0 )^{1/2} \frac{\log n}{\sqrt n} \left[ \frac{ \sqrt{2 c_1 K}}{m_\alpha} + 
+\log \left( \frac{n \sqrt{c_1 K} \log n}{m_\alpha} \right) \sqrt{ \log (2d)} \right],
 $$
 %
 and any $T \geq 1$, the event $\cT$ happens with probability $\geq$
 %
 $$
-\rtbd
+1 - C_2 \log n \exp \left[ - \frac{n T^2 \delta^2 }{ C_3^2 K \log n} \right] -
+\frac{k_9 \sqrt{K}}{n^{3/2} \log n}
 $$
 \end{Theorem}
 
@@ -605,13 +607,32 @@ $$
 %
 so that
 %
-\begin{align*}
+\begin{align}
 & P \left( \sup_\bfeta \frac{ |V_n(\bfeta_0) - V_n(\bfeta)| \BI(G(\bfx) > M_n)}{\lambda_0 \vee
-(P_\alpha(\bftheta - \bftheta_0) + \| \bfvt - \bfvt_0 \|_2) } \geq T \lambda_0 \right) \\
+(P_\alpha(\bftheta - \bftheta_0) + \| \bfvt - \bfvt_0 \|_2) } \geq T \lambda_0 \right) \notag\\
 & \leq P \left( \frac{\sqrt K}{n} \sum_{i=1}^n k_3 (\| \bfepsilon_i \| + k_4) \BI(\| \bfepsilon_i \| > M_n - k_5)
-+ \BE [ k_3 (\| \bfepsilon \| + k_4) \BI(\| \bfepsilon \| > M_n - k_5) ] \geq T k_6 \lambda_0 \right) 
-\end{align*}
++ \BE [ k_3 (\| \bfepsilon \| + k_4) \BI(\| \bfepsilon \| > M_n - k_5) ] \geq T \lambda_0 \right) \notag\\
+& \leq \frac{(\sqrt K + 1) \BE[ k_3 (\| \bfepsilon \| + k_4) \BI(\| \bfepsilon \| > M_n - k_5) ]}{T \lambda_0}
+\label{eqn:thm2eqn4}
+\end{align}
+%
+using Markov inequality.
 
+Since $\bfepsilon \sim \cN({\bf 0}, \Omega_x^{-1})$, i.e. sub-gaussian, we have the following tail bound:
+%
+$$
+\BE[ k_3 (\| \bfepsilon \| + k_4) \BI(\| \bfepsilon \| > M_n - k_5) ] \leq k_6 \exp(- k_7 M_n^2),
+$$
+%
+using constants $k_6, k_7 > 0$ depending on $\Omega_x$ only. Now take $M_n = \log n$. Using \eqref{eqn:defineDelta} and $\lambda_0 = 2 \delta$ it is easy to see that $\lambda_0 \succeq \log n/ \sqrt n$.  Putting everything back in \eqref{eqn:thm2eqn4} we thus have a probability bound on the tail of the empirical process:
+%
+$$
+P \left( \sup_\bfeta \frac{ |V_n(\bfeta_0) - V_n(\bfeta)| \BI(G(\bfx) > M_n)}{\lambda_0 \vee
+(P_\alpha(\bftheta - \bftheta_0) + \| \bfvt - \bfvt_0 \|_2) } \geq T \lambda_0 \right) \leq
+\frac{k_8 (\sqrt K + 1) \sqrt n}{n^2 \log n} \leq \frac{k_9 \sqrt K}{n^{3/2} \log n}.
+$$
+
+Combining the conclusions of parts I and II and taking $M_n = \log n$, theorem \ref{thm:thm2} is now immediate.
 \end{proof}
 %
 
