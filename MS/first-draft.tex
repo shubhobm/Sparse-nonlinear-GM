@@ -152,32 +152,23 @@ which simplifies to \citep{FreyHinton99}
 where $m_{ijl} = \BE_q \varphi( h_{ijl}), v_{ijl} = \BE_q (\varphi( h_{ijl}) - m_{ijl})^2$.
 
 \subsection{Objective function}
-We shall solve a penalized version of the variational lower bound in \eqref{eqn:elbo}:
+Our goal is to solve a penalized version of the variational lower bound in \eqref{eqn:elbo}:
 %
 \begin{align*}
--\frac{2}{n} \ell_q(\bfX|\cB,\Omega,\cM,\cS) + \sum_{l=1}^L \| \bfB_l\|_1 + \| \Omega_x \|_{1,\text{off}} +
-P(\cM) + Q(\cS)
+-\frac{2}{n} \ell_q(\bfX|\cB,\Omega,\cM,\cS) + \sum_{l=1}^L
+\lambda_{nl} \| \bfB_l\|_1 +\gamma_n  \| \Omega_x \|_{1,\text{off}}
 \end{align*}
 %
-with $P,Q$ being penalties over the variational parameters. We solve this using a variational (monte-carlo?) EM algorithm-
 
-\noindent{\bf E -step}: Given values of $\cB,\Omega_x,\bfsigma_l$, solve for the variational parameters by solving
-%
-$$
--\frac{2}{n} \ell_q(\bfX|\cB,\Omega,\cM,\cS) + P(\cM) + Q(\cS)
-$$
+We take the greedy strategy of solving two-layer problems successively. This means molte-carlo {\it sequential} EM: first solve for the variational parameters $(\bfM_1, \bfS_1) = ((\mu_{ij,1}, s_{ij,1}))$, in the E step, then solve for $(\bfB_1,\Omega_x)$ in the M step, and continue until convergence. After convergence is reached, go to the next layer. Similar to \cite{Hinton06, Bengio07}. 
 
-\noindent{\bf M -step}: Given the variational parameters, solve for the model parameters by solving an $\ell_1$-penalized version of \eqref{eqn:loglik}.
-
-We take the greedy strategy of solving two-layer problems successively. This means molte-carlo {\it sequential} EM: first solve for the variational parameters $(\bfM_1, \bfS_1) = ((\mu_{ij,1}, s_{ij,1}))$, in the E step, then solve for $(\bfB_1,\Omega_x)$ in the M step, and continue until convergence. After that only go to the next layer. Similar to \cite{Hinton06, Bengio07}. We assume a rank-1 representation for $\bfM \equiv \bfM_1$ and $\bfS \equiv \bfS_1$:
-\begin{align*}
-\bfM &= \bfa \bfb^T, \bfa \in \BR^n, \bfb \in \BR^q, q \equiv p_1,\\
-\bfS &= \bfc \bfd^T, \bfc \in \BR^n, \bfd \in \BR^q
-\end{align*}
-%
-We further assume generative parameters for $\bfa$: $a_i \sim N(\mu,\sigma^2)$ for $i \in \cI_n$.
-
-Can calculate gradients of E-step using chain rule and Appendix A of \cite{FreyHinton99}.
+%We assume a rank-1 representation for $\bfM \equiv \bfM_1$ and $\bfS \equiv \bfS_1$:
+%\begin{align*}
+%\bfM &= \bfa \bfb^T, \bfa \in \BR^n, \bfb \in \BR^q, q \equiv p_1,\\
+%\bfS &= \bfc \bfd^T, \bfc \in \BR^n, \bfd \in \BR^q
+%\end{align*}
+%%
+%We further assume generative parameters for $\bfa$: $a_i \sim N(\mu,\sigma^2)$ for $i \in \cI_n$.
 
 \begin{figure}[t]
 \centering
@@ -185,23 +176,44 @@ Can calculate gradients of E-step using chain rule and Appendix A of \cite{FreyH
 \includegraphics[height=.2\textheight]{latentinteractions}
 \end{figure}
 
-Now the objective function for a two-layer model becomes:
+The objective function for a two-layer model, with the top layer being the observed data $\cX$, is:
 %
 \begin{align*}
 &\Tr \left[ \frac{1}{n} (\bfX - \varphi(\bfH) \bfB )^T (\bfX - \varphi(\bfH) \bfB ) \Omega_x \right] + 
-\log \det \Omega_x + \| \bfB\|_1\\
+\log \det \Omega_x + \lambda_n \| \bfB\|_1 +
+\gamma_n \| \Omega_x \|_{1,\text{off}}.\\
 \end{align*}
 %
+When $\varphi$ is identity, this becomes a sparse factor model (refs). However for non-linear $\varphi$ optimizing this becomes difficult. To tackle this, we use a variational approximation of the objective function. We assume the following hierarchical generative model for the hidden variables and associated variational parameters:
+%
+\begin{align}
+h_{ij} & \sim N(\mu_{ij}, \sigma_{ij}^2), \notag\\
+\mu_{ij} & \sim \sum_{k=1}^K I_{mk} N(\mu_{mk}, \sigma_{mk}^2); \quad I_{mk} = \text{Ber}(\pi_{mk}) \notag\\
+\log \sigma_{ij} & \sim \sum_{k=1}^K I_{sk} N(\mu_{sk}, \sigma_{sk}^2); \quad I_{sk} = \text{Ber}(\pi_{sk}). \label{eqn:hierarchy}
+\end{align}
+%
+Thus in total there are $6K$ generative parameters. Following the framework of hierarchical variational models (refs), we replace the negative loglikelihood $-l (\bfx; \theta)$ by a hierarchical evidence lower bound (HELBO) $-\bar l (\bfx; \bfvt)$, defined as:
+%
+$$
+\bar l(\bfx; \bfeta) = \BE_2 l(\bfx, \bfh_\varphi; \bfeta) +
+\BE_1 \text{KL}(q(\bfm, \bfs| \bfx)\| p(\bfm, \bfs)) +
+\text{KL} (q(\bfvt| \bfz) \|  p(\bfvt)),
+$$
+%
+with $\BE_1$ and $\BE_2$ denoting expectations over the distributions of $(\bfm, \bfs)$ only and both the latent data and variational parameter distributions, respectively. Our desired set of parameter estimates (variational as well as generative) are defined as the minimizer of a penalized version of this HELBO:
+%
+\begin{align}\label{eqn:ObjFun}
+\hat \bfeta = \argmin_\bfeta \left[ \frac{1}{n} \sum_{i=1}^n
+\bar l(\bfx_i; \bfeta) + \lambda_n \| \bfB\|_1 +
+\gamma_n \| \Omega_x \|_{1,\text{off}} \right].
+\end{align}
 
-We assume the following hierarchical structures for the hidden variables and associated variational parameters:
-%
-\begin{align*}
-h_{ij} & \sim N(\mu_{ij}, \sigma_{ij}^2),\\
-\mu_{ij} & \sim \sum_{k=1}^K I_{mk} N(\mu_{mk}, \sigma_{mk}^2); \quad I_{mk} = \text{Ber}(\pi_{mk}),\\
-\sigma_{ij} & \sim \sum_{k=1}^K I_{sk} N(\mu_{sk}, \sigma_{sk}^2); \quad I_{sk} = \text{Ber}(\pi_{sk}),
-\end{align*}
-%
-Thus in total there are $6K$ variational parameters.
+\subsection{Computational algorithm}
+Our objective function in \eqref{eqn:ObjFun} is not convex in general. However, with the variational specifications in \eqref{eqn:hierarchy} it is bi-convex with respect to the variational and generative components of our parameter vector.
+
+\begin{Proposition}\label{prop:biconvex}
+The objective function in \eqref{eqn:ObjFun} is bi-convex with respect to the variational parameters $\bfvt$ and generative parameters $\bftheta$.
+\end{Proposition}
 
 \paragraph{E-step:} we solve for the variational parameters by minimizing the following (take $\bfH_\varphi \equiv \varphi(\bfH)$)
 %
@@ -333,6 +345,52 @@ $$
 
 
 \section{Proofs of main results}
+
+\begin{proof}[Proof of Proposition~\ref{prop:biconvex}]
+Since our penalties are convex, we only need to prove the biconvexity of the HELBO. For this we first simplify its squared error part. For $j,j' \in \cI_p$, consider $\bfX_j$ to be the $j\Th$ column of $\bfX$, $\bfb_j$ to be the $j\Th$ row of $\bfB$, and $\omega_{jj'}$ to be the $(j,j')\Th$ element of $\Omega_x$.
+%
+\begin{align}\label{eqn:prop1proofeqn1}
+\frac{1}{n} \Tr [ (\bfX - \bfH_\varphi \bfB)
+(\bfX - \bfH_\varphi \bfB)^T \Omega_x ] =
+\frac{1}{n} \sum_{j,j'=1}^p \omega_{jj'}
+(\bfX_j - \bfH_\varphi \bfb_j)^T (\bfX_{j'} - \bfH_\varphi \bfb_{j'})
+\end{align}
+%
+Now substitute $\bfH_\varphi = \bfM + \bfS \odot \bfE_h$, where the elements of $\bfE_h$ are independently drawn from $N(0,1)$, and $\odot$ denotes element-wise multiplication. Simplifying, we have
+%
+\begin{align*}
+(\bfX_j - \bfH_\varphi \bfb_j)^T (\bfX_{j'} - \bfH_\varphi \bfb_{j'}) &= \bfX_j^T \bfX_{j'} - 2 \bfX_j^T (\bfM + \bfS \odot \bfE_h) \bfb_{j'} +\\
+& \bfb_j^T \bfM^T \bfM \bfb_{j'} + 2 \bfb_j^T \bfM^T (\bfS \odot \bfE_h) \bfb_{j'} + \bfb_j^T (\bfS \odot \bfE_h)^T (\bfS \odot \bfE_h) \bfb_{j'}
+\end{align*}
+%
+Taking expectation over the first-level variational distribution,
+%
+$$
+\BE_1 [(\bfX_j - \bfH_\varphi \bfb_j)^T (\bfX_{j'} - \bfH_\varphi \bfb_{j'})] = \bfX_j^T \bfX_{j'} - 2 \bfX_j^T \bfM \bfb_{j'} +
+\bfb_j^T \bfM^T \bfM \bfb_{j'} +
+\sum_{i=1}^n \bfb_j^T \bfS_i^T \bfS_i \bfb_{j'}
+$$
+%
+Now substitute
+%
+\begin{align*}
+\bfM &= \sum_{k=1}^K I_{mk} (\mu_{mk} \bfJ_{n \times q} + \sigma_{mk} \bfJ_{n \times q} \odot \bfE_{mk}),\\
+\bfS &= \exp \left[ \sum_{k=1}^K I_{sk} (\mu_{sk} \bfJ_{n \times q} + \sigma_{sk} \bfJ_{n \times q} \odot \bfE_{sk}) \right]
+,
+\end{align*}
+%
+and take expectation over the second-level variational distributions.
+\begin{align}
+\BE_2 [(\bfX_j - \bfH_\varphi \bfb_j)^T (\bfX_{j'} - \bfH_\varphi \bfb_{j'})] &= \bfX_j^T \bfX_{j'} -
+2\sum_{k} \pi_{mk}\mu_{mk} \bfX_j^T \bfJ_{n\times q}\bfb_{j'} \notag\\
+&+ n \bfb_j^T \bfb_{j'} \sum_k \pi_{mk} (\mu_{mk}^2 + \sigma_{mk}^2)\notag\\
+&+  n \bfb_j^T \bfb_{j'} \sum_k \pi_{sk} \exp[2 (\mu_{sk} + \sigma_{sk}^2)]. \label{eqn:prop1proofeqn2}
+\end{align}
+%
+For the last term we use the fact that if $x \sim N(\mu,\sigma^2)$ then $\BE e^{tx} = e^{t\mu + t^2 \sigma^2/2}$.
+
+The right hand side of \eqref{eqn:prop1proofeqn2} is quadratic in $\bfB$, and the quadratic terms all have positive coefficients. Thus, in conjunction with \eqref{eqn:prop1proofeqn1} we can easily conclude that the negative log-likelihood is convex in $(\bfB,\Omega_x)$ for fixed $\bfvt$. Other terms in the HELBO do not depend either $\bfB$ or $\Omega_x$, the same holds for it as well.
+\end{proof}
 
 \begin{proof}[Proof of Theorem~\ref{thm:thm1}]
 Just prove an equivalent lemma of \cite{StadlerEtal10}. Details $\rtbd$.
