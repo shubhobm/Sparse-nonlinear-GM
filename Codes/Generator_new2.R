@@ -1,10 +1,15 @@
 # ThetaMat() generates the precision matrix
-ThetaMat = function(q,type="random",CN=NULL,Theta1=NULL,Theta2=NULL, SNR=1){
+ThetaMat = function(q,type="random",CN=NULL,
+                    Theta1=NULL,Theta2=NULL, SNR=1, prob=NULL){
 	# by default, generates a random graph with sparsity level being 5/q;
 	# if conditional number is not specified, the default will be the dimension of the matrix (as in Cai)
 	# alternatively, type could be "band", with the off-diagonals provided
 	
 	Theta = array(0,c(q,q))
+	if(is.null(prob)){
+	  prob = 5/q
+	}
+	
 	if (type=="random"){
 		diag(Theta) = 0;
 		if (is.null(CN))
@@ -12,7 +17,7 @@ ThetaMat = function(q,type="random",CN=NULL,Theta1=NULL,Theta2=NULL, SNR=1){
 		# for off-diagonals:
 		for (i in 1:(q-1)){
 			for (j in (i+1):q){
-				Theta[j,i] = SNR*rbinom(1,1,5/q)*sample(c(-1,1),1)*runif(1,0.5,1);
+				Theta[j,i] = SNR*rbinom(1,1,prob)*sample(c(-1,1),1)*runif(1,0.5,1);
 				Theta[i,j] = Theta[j,i];
 			}
 		}
@@ -104,6 +109,7 @@ GenerateZ = function(n, q, pi.m, mu.m, sig.m, pi.s, mu.s, sig.s){
   # Generate M and S
   M = matrix(0, n, q)
   S = M
+  K = length(pi.m)
   # for(i in 1:n){
   #   for(j in 1:q){
   #     ran1 = runif(1,0,1)

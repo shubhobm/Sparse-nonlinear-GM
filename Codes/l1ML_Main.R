@@ -20,7 +20,10 @@ require(glasso)
 #	B0,Theta0 -- initial value for B/Theta (mainly for debug use), default is NULL.
 #	Trace = TRUE/FALSE; if we trace the change of B and Theta for every iteration, default is FALSE. 
 
-l1ML_Main = function(Y,X,initializer="Lasso",lambda=NULL,rho=NULL,Screening=TRUE,correction="BH",alpha=0.1,StabilizeTheta=TRUE,rho.seq=NULL,B0=NULL,Theta0=NULL,VERBOSE=TRUE,TRACE=FALSE){
+l1ML_Main = function(Y,X,initializer="Lasso",lambda=NULL,rho=NULL,
+                     Screening=TRUE,correction="BH",alpha=0.1,
+                     StabilizeTheta=TRUE,rho.seq=NULL,B0=NULL,Theta0=NULL,
+                     VERBOSE=TRUE,TRACE=FALSE){
 	n = nrow(X);
 	if (n!=nrow(Y)){
 		stop("The numbers of samples in Layer 1 and Layer 2 differ!")
@@ -205,17 +208,12 @@ l1ML_Main = function(Y,X,initializer="Lasso",lambda=NULL,rho=NULL,Screening=TRUE
 		}
 		CONVERGE = (abs(Obj_diff)<1e-4);
 
-		if (iter == 100){
-			cat("Exceeds the maximum number of iterations allowed",'\n');
-			break;
-		}
 		if (VERBOSE){
 			cat(paste(c('iter=','Obj_diff=','lambda=','rho='),c(iter,round(Obj_diff,4),round(lambda,3),round(rho,3)),sep=" "),'\n');
 		}
-			
 	
 		## if converge, we start the refitting procedure
-		if (CONVERGE){ 
+		if (CONVERGE | iter == 50){ 
 			if (VERBOSE)
 				cat("Theta was updated ",update.counter,"times",'\n')			
 
@@ -252,6 +250,11 @@ l1ML_Main = function(Y,X,initializer="Lasso",lambda=NULL,rho=NULL,Screening=TRUE
 				Theta.refit = as.matrix(huge(ResMat.refit,rho,method="glasso",verbose=FALSE)$icov[[1]])
 			}
 			
+		}
+		
+		if (iter == 50){
+		  cat("Exceeds the maximum number of iterations allowed",'\n');
+		  break;
 		}
 	}
 	B.est = B.refit; Theta.est = Theta.refit;
