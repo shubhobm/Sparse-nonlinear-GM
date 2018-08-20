@@ -1,6 +1,9 @@
 rm(list=ls())
 setwd('c:/Study/My projects/Sparse-nonlinear-GM/Codes/')
+setwd('c:/Study/Sparse-nonlinear-GM/Codes/')
+
 source('HLGM.R')
+source('HLGM-bin.R')
 source('Generator_new2.R')
 
 source('jsem.R')
@@ -25,17 +28,20 @@ analyze = function(Obj){
 
 trace.plot = function(Obj){
   par(mfrow=c(2,3))
+  K = length(Obj$var.list[[1]][[1]])
+  
   for(vi in 1:6){
     plot(as.numeric(lapply(Obj$var.list, function(x) x[[vi]][[1]])),
          type='l', ylim=c(0,1.5))
-    lines(as.numeric(lapply(Obj$var.list, function(x) x[[vi]][[2]])), lty=2)
-    lines(as.numeric(lapply(Obj$var.list, function(x) x[[vi]][[3]])), lty=3)
+    for(k in 2:K){
+      lines(as.numeric(lapply(Obj$var.list, function(x) x[[vi]][[k]])), lty=k)
+    }
   }
   par(mfrow=c(1,1))
 }
 
 ##### Generate data
-n = 200
+n = 1e3
 p = 20
 q = 10
 set.seed(11192017)
@@ -62,17 +68,18 @@ loopfun = function(rep){
   }
 
   # q=5
-  system.time(Objq5 <- hlgm2(X, q=5, momentum=0,maxit=30))
+  system.time(Objq5 <- hlgm2.bin(X, q=5, K=3, momentum=0,maxit=50))
   a = analyze(Objq5)
+  a
   plot(a$Obj, type='l')
   trace.plot(Objq5)
   
   # no momentum
-  system.time(Objq10 <- hlgm2(X, q=10, momentum=0,maxit=30))
-  # a = analyze(Objq10)
-  # a
-  # plot(a$Obj, type='l')
-  # trace.plot(Objq10)
+  system.time(Objq10 <- hlgm2.bin(X, q=10, K=5, momentum=0,maxit=50))
+  a = analyze(Objq10)
+  a
+  plot(a$Obj, type='l')
+  trace.plot(Objq10)
   
   out200p30 = list(Objq5,Objq10)
   save(out200p30, file="outn200p30.Rda")

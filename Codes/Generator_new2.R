@@ -140,6 +140,25 @@ GenerateZ = function(n, q, pi.m, mu.m, sig.m, pi.s, mu.s, sig.s){
   M + matrix(rnorm(n*q),n,q)*exp(-S)
 }
 
+GenerateZ.bin = function(Z.bin, n, q, pi.m, mu.m, sig.m, pi.s, mu.s, sig.s){
+  # Generate M and S
+  M = matrix(0, n, q)
+  S = M
+  K = length(pi.m)
+  
+  for(i in 1:n){
+    for(j in 1:q){
+      bin = Z.bin[i,j]
+      M[i,j] = sum(pi.m[,bin]*rnorm(rep(1,K),mu.m[,bin],sig.m[,bin]))
+      S[i,j] = sum(pi.s[,bin]*rnorm(rep(1,K),mu.s[,bin],sig.s[,bin]))
+    }
+  }
+  
+  # generate Z
+  M + matrix(rnorm(n*q),n,q)*exp(-S)
+}
+
+
 
 
 
